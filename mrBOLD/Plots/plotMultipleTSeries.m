@@ -24,6 +24,7 @@ if ~exist('getRawData', 'var'), getRawData  = false;                    end
 nCycles     = viewGet(vw, 'numCycles', scan);
 frameRate   = viewGet(vw, 'frameRate', scan);
 nFrames     = viewGet(vw, 'nFrames', scan);
+framesToUse = viewGet(vw, 'frames to use', scan);
 
 % Select ROIs
 [selectedROIs, nROIs] = roiGetList(vw, ROIlist);
@@ -81,7 +82,7 @@ for r=1:nROIs
         fontSize=6;
     end
     
-    xtick = 0:nFrames*frameRate/nCycles:nFrames*frameRate;
+    xtick = 0:length(framesToUse)*frameRate/nCycles:length(framesToUse)*frameRate;
     set(gca,'xtick',xtick)
     
     set(gca,'FontSize',fontSize)

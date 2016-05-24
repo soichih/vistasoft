@@ -56,7 +56,7 @@ zoffsets=[-.5+1/(2*sampRate(3)):1/sampRate(3):.5-1/(2*sampRate(3))];
 % yoffsets=[0:1/sampRate(2):1-1/sampRate(2)];
 % zoffsets=[0:1/sampRate(3):1-1/sampRate(3)];
 
-% Divide alpha by prod(sampRate) to get partial volume for the
+% Divide  by prod(sampRate) to get partial volume for the
 % supersampled voxels.
 %
 alpha = repmat(1/prod(sampRate),[1 size(ROIcoords,2)]);
@@ -93,14 +93,10 @@ for ioff=1:length(xoffsets)
 			% Convert to indices and remove duplicates
 			indices = coords2Indices(coords,dims);
             
-			% Accumulate partial volume.  Need to do it in a loop
-			% instead of:
-			%    accum(indices) = accum(indices) + alpha;
-			% because an index can appear twice in indices and we want
-			% to accumulate them both.
-			for jj=1:length(indices)
-				accum(indices(jj)) = accum(indices(jj)) + alpha(jj);
-			end
+			% Accumulate partial volume
+            [u, ia, ~] = unique(indices);
+            addme = hist(indices, u) .* alpha(ia); % counts * alpha
+            accum(u) = accum(u) + addme;
 		end
 	end
 end

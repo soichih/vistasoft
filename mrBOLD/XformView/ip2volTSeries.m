@@ -77,7 +77,7 @@ end
 % It is now a separate routine. The third argument when set to true returns
 % the precise (non-integer) functional coords, which are interpolated
 % below.
-ipCoords = ip2volXformCoords(gray, inplane, true);
+ipCoords = vol2ipXformCoords(gray, inplane, true);
 
 % Loop through the scans
 for scan = selectedScans

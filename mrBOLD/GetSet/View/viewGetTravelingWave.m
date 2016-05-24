@@ -96,11 +96,21 @@ switch param
             end
         end
     case 'phwin'
+        
         % Return  phWindow values from phWindow sliders (non-hidden views)
         % or from the view.settings.phWin field (hidden views). If can't
         % find either, defaults to [0 2*pi].
-        %   phwin = viewGet(vw, 'phase window');
-        val = getPhWindow(vw);
+        %   phwin = viewGet(vw, 'phase window');                
+        if isequal(vw.name, 'hidden')
+            if checkfields(vw, 'settings', 'phWin')
+                val = vw.settings.phWin;
+            else
+                val = [0 2*pi];
+            end
+        else
+            val = [get(vw.ui.phWinMin.sliderHandle,'Value'),...
+                get(vw.ui.phWinMax.sliderHandle,'Value')];
+        end
         
         % colorbar-related params: this code uses a simple linear
         % mapping from coAnal phase -> polar angle or eccentricity

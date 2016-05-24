@@ -1,4 +1,4 @@
-function [area smoothedArea] = roiSurfaceArea(vw, roi, msh)
+function [area, smoothedArea] = roiSurfaceArea(vw, roi, msh)
 % Get the surface area of an ROI on a mesh
 %
 % [area smoothedArea] = roiSurfaceArea(vw, roi, msh)

@@ -44,7 +44,7 @@ function [subdata, indices] = getCurDataROI(vw, fieldname, scan, roi)
 %
 % ras, 1/2009
 % - returns indices variable if requested
-if notDefined('vw'),      vw = getCurView;                  end
+if notDefined('vw'),        vw = getCurView;                  end
 if notDefined('fieldname'), fieldname = vw.ui.displayMode;    end
 if notDefined('scan'),      scan = viewGet(vw, 'curScan');    end
 if notDefined('roi'),       roi = viewGet(vw, 'curRoi');      end
@@ -56,22 +56,15 @@ switch viewGet(vw,'View Type')
 case 'Inplane'
     % Pull out data for this scan
     data = getCurData(vw,fieldname,scan);
-    % Construct subdata for voxels in ROI
-    % Need to divide the roi.coords by the upSample factor because the
-    % data are no longer interpolated to the inplane size.
-    rsFactor = upSampleFactor(vw,scan);
-    if length(rsFactor)==1
-        roi.coords(1:2,:)=round(roi.coords(1:2,:)/rsFactor(1));
-    else
-        roi.coords(1,:)=round(roi.coords(1,:)/rsFactor(1));
-        roi.coords(2,:)=round(roi.coords(2,:)/rsFactor(2));
-    end
-    indices = coords2Indices(roi.coords,dataSize(vw,scan));
-    if ~isempty(data)
-        subdata = data(indices);    
-    else
-        subdata = NaN*ones(size(indices));
-    end
+   
+    % Get indices to functional data from anatomical coords
+    preserveExactValues = false; preserveCoords = true;
+    [~, indices] = ip2functionalCoords(vw, roi.coords, ...
+    scan, preserveCoords, preserveExactValues);
+    
+    % Get the data
+    if ~isempty(data), subdata = data(indices);    
+    else               subdata = NaN*ones(size(indices)); end
     
 case {'Volume','Gray'}
     % Pull out data for this scan
@@ -83,9 +76,7 @@ case {'Volume','Gray'}
     % intersection, NaNs for ROI voxels where there's no data.
     [commonCoords, indRoi, indView] = intersectCols(roi.coords, vw.coords); %#ok<ASGLU>
     subdata = NaN([1 size(roi.coords,2)]);
-    if ~isempty(data)
-        subdata(indRoi) = data(indView);
-    end
+    if ~isempty(data), subdata(indRoi) = data(indView); end
     
     if nargout > 1
         indices = NaN(size(indRoi));
@@ -95,13 +86,11 @@ case {'Volume','Gray'}
 case 'Flat'
     % Pull out data for this scan
     data = getCurData(vw,fieldname,scan);
+    
     % Construct subdata for voxels in ROI
     indices = coords2Indices(roi.coords,viewGet(vw,'Size'));
-    if ~isempty(data)
-        subdata = data(indices);   
-    else
-        subdata = NaN*ones(size(indices));
-    end
+    if ~isempty(data),  subdata = data(indices);   
+    else                subdata = NaN*ones(size(indices)); end
 end
     
 return;

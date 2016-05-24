@@ -40,6 +40,7 @@ function data = plotMeanFFTSeries(vw,scanNum,plotFlag)
 if notDefined('scanNum'),  scanNum = getCurScan(vw); end
 if notDefined('plotFlag'), plotFlag = 1; end
 
+
 % Special case: if this is a FLAT view, auto-xform the ROI to INPLANE and
 % plot the time series from the INPLANE. (This is because we don't have an
 % agreed-upon way of xforming time series to FLAT). Otherwise, we proceed
@@ -49,14 +50,16 @@ if isequal(vw.viewType, 'Flat')
 	return
 end
 
+% restrict the tseries to the appropriate frames
+framesToUse = viewGet(vw, 'frames to use', scanNum);
 nCycles   = viewGet(vw, 'num cycles' ,scanNum);
-maxCycles = round(viewGet(vw, 'num frames',scanNum)/2); % number of frequencies to plot
+maxCycles = round(length(framesToUse)/2); % number of frequencies to plot
 
 % Load up the time series for this view.  Should we check whether it is
 % already loaded?
 ROIcoords  = viewGet(vw, 'ROI coordinates');
 tSeriesROI = voxelTSeries(vw, ROIcoords, scanNum);
-
+tSeriesROI = tSeriesROI(framesToUse, :);
 % Calulate the FFT for each pixel.  The tSeriesROI is nTimes x nVoxels
 absFFT  = 2*abs(fft(tSeriesROI)) / size(tSeriesROI,1);
 meanFFT = mean(absFFT,2);

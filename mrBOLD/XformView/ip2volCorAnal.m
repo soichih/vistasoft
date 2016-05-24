@@ -108,7 +108,7 @@ end
 % It is now a separate routine. The third argument when set to true returns
 % the precise (non-integer) functional coords, which are interpolated
 % below.
-coordsXformed = ip2volXformCoords(volume, inplane, true);
+coordsXformed = vol2ipXformCoords(volume, inplane, true);
 
 
 % Loop through the scans and use interp3 to transform the values

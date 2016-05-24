@@ -26,7 +26,7 @@ case 'Inplane',
         pathStr = sessionGet(mrSESSION,'Inplane Path');
     end
     if ~exist('pathStr','var') || isempty(pathStr)
-        error(sprintf('No path has been specified or found in mrSESSION.\n'));
+        error('No path has been specified or found in mrSESSION.');
     end
     if ~exist(pathStr,'file')
         error(['No file at the location: ',pathStr]);
@@ -42,7 +42,7 @@ case {'Volume','Gray','generalGray'}
     
 case 'SS',
     if ~exist('pathStr','var')
-        if ~exist(fullfile(HOMEDIR,'RawDicom','Anatomy','SS'))
+        if ~exist(fullfile(HOMEDIR,'RawDicom','Anatomy','SS'), 'dir')
             pathStr = fullfile(HOMEDIR,'Raw','Anatomy','SS');
         else pathStr = fullfile(HOMEDIR,'RawDicom','Anatomy','SS');
         end

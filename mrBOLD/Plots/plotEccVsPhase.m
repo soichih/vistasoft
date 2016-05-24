@@ -66,15 +66,23 @@ ROIcoords = viewGet(vw, 'ROI coords');
 
 % Get co and ph (vectors) for the current scan, within the
 % current ROI.
-I = viewGet(vw, 'ROI indices');
+
+%I = viewGet(vw, 'ROI indices');
 model = viewGet(vw, 'rmmodel');
 model = model{1};
-co = rmGet(model, 'varexp');
-co = co(I);
-ph = rmGet(model, 'pol');
-ph = ph(I);
-ecc = rmGet(model, 'ecc');
-ecc = ecc(I);
+% co = rmGet(model, 'varexp');
+% co = co(I);
+% ph = rmGet(model, 'pol');
+% ph = ph(I);
+% ecc = rmGet(model, 'ecc');
+% ecc = ecc(I);
+
+co = rmCoordsGet(viewGet(vw, 'viewtype'),  model, 'varexp', ROIcoords);
+ph = rmCoordsGet(viewGet(vw, 'viewtype'),  model, 'polarangle', ROIcoords);
+ecc = rmCoordsGet(viewGet(vw, 'viewtype'),  model, 'ecc', ROIcoords);
+
+
+
 
 % Remove NaNs from subCo and subAmp that may be there if ROI
 % includes volume voxels where there is no data.
@@ -147,7 +155,7 @@ params.maxAmp = eccthresh;
 polarPlot(0,params);
 
 % finish plotting it
-for i=1:size(subX,2)
+for i=1:length(subX)
     if colored
         h=plot(subX(i),-subY(i),'o','MarkerSize',symbolSize,'Color',[1-subCo(i) 1-subCo(i) 1-subCo(i)]);
         set(h,'MarkerFaceColor',[1-subCo(i) 1-subCo(i) 1-subCo(i)])

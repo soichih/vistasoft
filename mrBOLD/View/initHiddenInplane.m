@@ -65,7 +65,7 @@ elseif ischar(dataType),
 end
 
 % Initialize curScan
-vw.curScan = scan;
+vw = viewSet(vw, 'current scan', scan);
 
 % Load Anatomy of this view
 vw = loadAnat(vw);

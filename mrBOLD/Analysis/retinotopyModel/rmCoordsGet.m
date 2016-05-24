@@ -39,6 +39,10 @@ switch lower(viewType),
         %   val = tmp(x, y, z);
         % In the case of a 2D anat, we would like 
         %   val = tmp(x,y);
+        
+        % convert inplane coords to functional coords
+        coords = ip2functionalCoords(vw, coords, 1, false, false);
+        
         if length(size(tmp)) == dims
             val = zeros(size(coords, 2), 1);
             for n = 1:length(val),
