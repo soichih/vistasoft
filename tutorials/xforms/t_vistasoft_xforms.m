@@ -1,7 +1,9 @@
 % TODO: Search for Upsample / rsFactor and replace it with calls to the
 % appropriate function, such as ip2functionalCoords
 %   
-dataDir = fullfile(mrvDataRootPath,'functional','mrBOLD_01');
+forceOverwrite = false;
+dataDir = mrtInstallSampleData('functional', 'mrBOLD_01', [], forceOverwrite);
+
 cd(dataDir);
 
 ip = mrVista;
@@ -139,7 +141,8 @@ gr = refreshScreen(gr);
 % We now want to write vol2ipParMap.m
 
 ipmap = viewGet(ip, 'mapscan',1);
-ip = vol2ipParMap(gr, ip, 1, 1);
+
+ip = vol2ipParMap(gr, ip, 1, 1, 'linear');
 
 % test whether the map returned from vol2ipParMap is within tol of the map
 % that we started with (ie ip map that got xformed to vol)
@@ -152,7 +155,7 @@ figure, imagesc(makeimagestack(ipmap2));colormap gray, axis image off
 figure, imagesc(makeimagestack(ipmap));colormap gray, axis image off
 figure, imagesc(makeimagestack(ipmap.*inds));colormap gray, axis image off
 figure, imagesc(makeimagestack(ipmap.*inds-ipmap2));colormap gray, axis image off
-figure, scatter(flatten(ipmap.*inds), flatten(ipmap2))
+figure, scatter(flatten(ipmap.*inds), flatten(ipmap2)); hold on, plot([0 6000], [0 6000], 'r-')
 assert(all(abs(ipmap2(inds) - ipmap(inds))>tol));
 
 
