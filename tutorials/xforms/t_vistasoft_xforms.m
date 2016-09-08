@@ -1,6 +1,8 @@
 % TODO: Search for Upsample / rsFactor and replace it with calls to the
 % appropriate function, such as ip2functionalCoords
 %   
+% Dependency:
+%   knkutils
 forceOverwrite = false;
 dataDir = mrtInstallSampleData('functional', 'mrBOLD_01', [], forceOverwrite);
 
@@ -141,7 +143,6 @@ gr = refreshScreen(gr);
 % We now want to write vol2ipParMap.m
 
 ipmap = viewGet(ip, 'mapscan',1);
-
 ip = vol2ipParMap(gr, ip, 1, 1, 'linear');
 
 % test whether the map returned from vol2ipParMap is within tol of the map
@@ -151,7 +152,7 @@ ipmap2 = viewGet(ip, 'mapscan',1);
 inds = ~isnan(ipmap2);
 tol = 10;
 
-figure, imagesc(makeimagestack(ipmap2));colormap gray, axis image off
+figure, imagesc(    (ipmap2));colormap gray, axis image off
 figure, imagesc(makeimagestack(ipmap));colormap gray, axis image off
 figure, imagesc(makeimagestack(ipmap.*inds));colormap gray, axis image off
 figure, imagesc(makeimagestack(ipmap.*inds-ipmap2));colormap gray, axis image off

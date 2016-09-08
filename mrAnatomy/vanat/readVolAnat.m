@@ -33,16 +33,18 @@ function [vData,mmPerPix,volSize,fileName] = readVolAnat(fileName)
 % (c) Stanford VISTA Team 2000
 
 if(~exist('fileName','var'))
-    [mmPerPix,volSize,fileName] = readVolAnatHeader;
-else
-    [mmPerPix,volSize,fileName] = readVolAnatHeader(fileName);
+    [~,~,fileName] = readVolAnatHeader;
 end
 
 % Load the vANATOMY
 ni = niftiRead(fileName);
 
 % ensure oriention is canonical
-ni = niftiApplyCannonicalXform(ni);
+[ni,canXform] = niftiApplyCannonicalXform(ni);
+
+% get pixel size and volume dimensions after 
+mmPerPix = niftiGet(ni, 'pixdim');
+mmPerPix = mmPerPix(1:3);
 
 % Scale intensities to 0-255 range
 switch class(ni.data)
@@ -81,6 +83,7 @@ end
 % vAnatomy is [Z Y X] but the cannonical NFTI is [X Y Z], so we need to
 % permute the dims. We also need to flip Z and Y.
 vData = mrAnatRotateAnalyze(vData);
-
+mmPerPix = mmPerPix([3 2 1]);
+volSize  = size(vData);
 
 return

@@ -15,7 +15,7 @@ if ieNotDefined('format'), format = 'polar'; end
 if ieNotDefined('vw'), error('View must be defined.'); end
 if ieNotDefined('drawROI'), drawROI = false; end
 
-curScan = getCurScan(vw);
+curScan = viewGet(vw, 'Current Scan');
 
 % Get selpts from current ROI
 if vw.selectedROI, 
@@ -34,7 +34,7 @@ end
 
 % Remove NaNs from subCo and subAmp that may be there if ROI
 % includes volume voxels where there is no data.
-NaNs = find(isnan(co));
+NaNs = find(isnan(co), 1);
 if ~isempty(NaNs)
   myWarnDlg('ROI includes voxels that have no data.  These voxels are being ignored.');
   notNaNs = find(~isnan(co));
@@ -45,10 +45,10 @@ end
 % Read cothresh and phWindow from the slide bars, and get indices
 % of the co and ph vectors that satisfy the cothresh and phWindow.
 %
-cothresh = getCothresh(vw);
-phWindow = getPhWindow(vw);
-phIndices = phWindowIndices(ph,phWindow);
-coIndices = find(co > cothresh);
+cothresh    = viewGet(vw, 'co thresh');
+phWindow    = viewGet(vw, 'phWindow');
+phIndices   = phWindowIndices(ph,phWindow);
+coIndices   = find(co > cothresh);
 bothIndices = intersect(phIndices,coIndices);
 
 % Pull out co and ph for desired pixels

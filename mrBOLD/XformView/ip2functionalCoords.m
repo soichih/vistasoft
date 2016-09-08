@@ -48,16 +48,18 @@ nVoxels  = size(ipAnatCoords, 2);
 rsFactor = upSampleFactor(inplane, scan)';
 
 % scale 'em
-ipFuncCoords = ipAnatCoords ./ repmat(rsFactor, [1 nVoxels]);
+% ipFuncCoords = (ipAnatCoords) ./ repmat(rsFactor, [1 nVoxels]);
+ipFuncCoords = (ipAnatCoords-1) ./ repmat(rsFactor, [1 nVoxels])+1;
 
 % round unless exact values are requested. if non-integer values are
 % returned, then the parent function will need to deal with them, e.g., via
 % interpolation.
-if ~preserveExactValues, ipFuncCoords = round(ipFuncCoords); end
+%if ~preserveExactValues, ipFuncCoords = round(ipFuncCoords); end
+if ~preserveExactValues, ipFuncCoords = floor(ipFuncCoords); end
 
-% remove redunanant voxels
+% remove redundant voxels
 if ~preserveCoords
-    [ipFuncCoords ia] = intersectCols(ipFuncCoords, ipFuncCoords); 
+    [ipFuncCoords, ia] = intersectCols(ipFuncCoords, ipFuncCoords); 
     
     % when we use intersectCols to remove redundant voxels, we also have
     % the undesired result of sorting voxels. to preserve the order of the

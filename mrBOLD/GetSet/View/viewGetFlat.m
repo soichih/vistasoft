@@ -21,25 +21,32 @@ switch param
     
     case 'graycoords'
         % 'graycoords' is also an alias for coords in volume/gray views:
-        if ~isequal(vw.viewType, 'Flat')
-            val = viewGet(vw, 'Coords');
-            return
+        switch lower(viewGet(vw, 'viewType'))
+            case 'inplane'
+                error('Can''t get gray coords from inplane view')
+            case {'gray', 'volume'}
+                val = viewGet(vw, 'Coords');
+            case 'flat'
+                % Example usage for FLAT view:
+                % val = viewGet(vw{1},'graycoords','left');
+                if length(varargin) ~= 1,
+                    error('You must specify which hemisphere.');
+                end
+                hname = varargin{1};
+                switch hname
+                    case 'left'
+                        val = vw.grayCoords{1};
+                    case 'right'
+                        val = vw.grayCoords{2};
+                    otherwise
+                        error('Bad hemisphere name');
+                end
+            
+            otherwise
+                error('Unrecognized view type %s', viewGet(vw, 'viewType'))
         end
         
-        % Example usage for FLAT view:
-        % val = viewGet(vw{1},'graycoords','left');
-        if length(varargin) ~= 1,
-            error('You must specify which hemisphere.');
-        end
-        hname = varargin{1};
-        switch hname
-            case 'left'
-                val = vw.grayCoords{1};
-            case 'right'
-                val = vw.grayCoords{2};
-            otherwise
-                error('Bad hemisphere name');
-        end
+
     case 'leftpath'
         if checkfields(vw,'leftPath'), val = vw.leftPath; end
     case 'rightpath'

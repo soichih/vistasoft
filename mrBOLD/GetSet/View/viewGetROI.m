@@ -75,6 +75,8 @@ switch param
                 % We need to be careful using intersectCols because it
                 % sorts the data.
                 [commonCoords, indROI, val] = intersectCols(roicoords, vw.coords); %#ok<*ASGLU>
+                % val = coords2indsGray(roicoords, viewGet(vw, 'gray coords'));
+                % [~, indROI, val] = intersectCols(roicoords, vw.coords); %#ok<*ASGLU>
                 [tmp, inds] = sort(indROI);
                 val = val(inds);
                 

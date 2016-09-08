@@ -71,7 +71,7 @@ end
 
 % Check that dataType is the same for both views. If not, doesn't make sense to do the xform.
 % because for example the two dataTypes may have a different number of scans.
-[inplane volume] = checkTypes(inplane, volume);
+[inplane, volume] = checkTypes(inplane, volume);
 
 % Allocate space for the volume data arrays.
 % If empty, initialize to cell array.
@@ -94,7 +94,7 @@ end
 % It is now a separate routine. The third argument when set to true returns
 % the precise (non-integer) functional coords, which are interpolated
 % below.
-coordsXformed = ip2volXformCoords(volume, inplane, true);
+coordsXformed = vol2ipXformCoords(volume, inplane, true);
 
 % Loop through the scans and use interp3 to transform the values
 % from the inplanes to the volume. For details, see ip2VolCorAnal

@@ -20,7 +20,7 @@ global vANATOMYPATH
 ipROI = roiCheck(ipROI); 
 
 % Get voxel sizes to make sure that the transformation preserves volume
-ipVoxSize = viewGet(ipView, 'voxel size');
+ipVoxSize  = viewGet(ipView, 'voxel size');
 volVoxSize = readVolAnatHeader(vANATOMYPATH);
 
 % Transform ROI coordinates
