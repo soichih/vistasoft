@@ -31,14 +31,16 @@ case 'Inplane',
     if ~exist(pathStr,'file')
         error(['No file at the location: ',pathStr]);
     else
+        ip = orientInplane(vw, pathStr);
         vw = viewSet(vw,'Anat Initialize',pathStr);
     end
     
 case {'Volume','Gray','generalGray'}
     if ~exist('pathStr','var'), pathStr = vANATOMYPATH;   end
     if ~exist(pathStr,'file'), pathStr = getVAnatomyPath; end
-    [vw.anat, vw.mmPerVox] = readVolAnat(pathStr); 
-	vw.anat = uint8(vw.anat); % if not uint8...
+    [anat, vw.mmPerVox, ~, ~, ni] = readVolAnat(pathStr); 
+    anat = scaleVolAnat(anat, ni);
+	vw = viewSet(vw, 'anat', uint8(anat)); % if not uint8...
     
 case 'SS',
     if ~exist('pathStr','var')
